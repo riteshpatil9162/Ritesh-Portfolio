@@ -63,7 +63,7 @@ const Hero = () => {
           </motion.h1>
 
           {/* Typing Animation */}
-          <div className="text-2xl md:text-4xl lg:text-5xl font-semibold text-white mb-8 h-20 flex items-center justify-center">
+          <div className="text-2xl md:text-4xl lg:text-5xl font-semibold text-white mb-8 h-16 sm:h-20 md:h-24 flex items-center justify-center">
             <TypeAnimation
               sequence={[
                 'Data Science Engineer',

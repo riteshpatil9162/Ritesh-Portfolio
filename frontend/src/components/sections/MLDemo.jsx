@@ -117,13 +117,13 @@ const MLDemo = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 mb-12 md:mb-16">
           {/* ML Predictor */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="glass rounded-2xl p-8"
+            className="glass rounded-2xl p-4 sm:p-6 md:p-8"
           >
             <div className="flex items-center gap-3 mb-6">
               <span className="text-4xl">🎓</span>
@@ -228,7 +228,7 @@ const MLDemo = () => {
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="glass rounded-2xl p-8"
+            className="glass rounded-2xl p-4 sm:p-6 md:p-8"
           >
             <div className="flex items-center gap-3 mb-6">
               <span className="text-4xl">📊</span>
@@ -236,7 +236,7 @@ const MLDemo = () => {
                 Skills Distribution
               </h3>
             </div>
-            <div className="h-64 flex items-center justify-center">
+            <div className="h-48 sm:h-56 md:h-64 flex items-center justify-center">
               <Doughnut data={skillsData} options={chartOptions} />
             </div>
           </motion.div>
@@ -247,7 +247,7 @@ const MLDemo = () => {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="glass rounded-2xl p-8"
+          className="glass rounded-2xl p-4 sm:p-6 md:p-8"
         >
           <div className="flex items-center gap-3 mb-6">
             <span className="text-4xl">📈</span>
@@ -255,7 +255,7 @@ const MLDemo = () => {
               Project Analytics
             </h3>
           </div>
-          <div className="h-80">
+          <div className="h-64 sm:h-72 md:h-80">
             <Bar data={projectsData} options={{
               ...chartOptions,
               scales: {

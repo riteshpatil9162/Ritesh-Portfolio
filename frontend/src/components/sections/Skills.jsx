@@ -32,12 +32,12 @@ const CircularProgress = ({ percentage, label, color, delay }) => {
 
   return (
     <div ref={ref} className="flex flex-col items-center">
-      <div className="relative w-48 h-48">
-        <svg className="transform -rotate-90 w-48 h-48">
+      <div className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48">
+        <svg className="transform -rotate-90 w-full h-full">
           {/* Background Circle */}
           <circle
-            cx="96"
-            cy="96"
+            cx="50%"
+            cy="50%"
             r={radius}
             stroke="rgba(255,255,255,0.1)"
             strokeWidth="12"
@@ -45,8 +45,8 @@ const CircularProgress = ({ percentage, label, color, delay }) => {
           />
           {/* Progress Circle */}
           <circle
-            cx="96"
-            cy="96"
+            cx="50%"
+            cy="50%"
             r={radius}
             stroke={color}
             strokeWidth="12"
@@ -60,10 +60,10 @@ const CircularProgress = ({ percentage, label, color, delay }) => {
         </svg>
         {/* Percentage Text */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-3xl font-bold text-white">{progress}%</span>
+          <span className="text-2xl sm:text-3xl font-bold text-white">{progress}%</span>
         </div>
       </div>
-      <p className="mt-4 text-lg font-semibold text-white">{label}</p>
+      <p className="mt-3 sm:mt-4 text-base sm:text-lg font-semibold text-white">{label}</p>
     </div>
   );
 };
