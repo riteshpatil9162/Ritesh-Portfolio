@@ -10,6 +10,7 @@ import Experience from './components/sections/Experience';
 import Contact from './components/sections/Contact';
 import MLDemo from './components/sections/MLDemo';
 import Chatbot from './components/chatbot/Chatbot';
+import ErrorBoundary from './components/common/ErrorBoundary';
 
 // Admin Components
 import Login from './components/admin/Login';
@@ -48,35 +49,37 @@ const Portfolio = () => (
 
 function App() {
   return (
-    <Router>
-      <Suspense fallback={<Loading />}>
-        <Routes>
-          {/* Main Portfolio Route */}
-          <Route path="/" element={<Portfolio />} />
+    <ErrorBoundary>
+      <Router>
+        <Suspense fallback={<Loading />}>
+          <Routes>
+            {/* Main Portfolio Route */}
+            <Route path="/" element={<Portfolio />} />
 
-          {/* Admin Login */}
-          <Route path="/admin/login" element={<Login />} />
+            {/* Admin Login */}
+            <Route path="/admin/login" element={<Login />} />
 
-          {/* Admin Dashboard Routes - Protected */}
-          <Route
-            path="/admin/dashboard"
-            element={
-              <ProtectedRoute>
-                <DashboardLayout />
-              </ProtectedRoute>
-            }
-          >
-            {/* Default redirect to projects */}
-            <Route index element={<Navigate to="/admin/dashboard/projects" replace />} />
-            <Route path="projects" element={<ProjectsManager />} />
-            <Route path="contacts" element={<ContactsManager />} />
-          </Route>
+            {/* Admin Dashboard Routes - Protected */}
+            <Route
+              path="/admin/dashboard"
+              element={
+                <ProtectedRoute>
+                  <DashboardLayout />
+                </ProtectedRoute>
+              }
+            >
+              {/* Default redirect to projects */}
+              <Route index element={<Navigate to="/admin/dashboard/projects" replace />} />
+              <Route path="projects" element={<ProjectsManager />} />
+              <Route path="contacts" element={<ContactsManager />} />
+            </Route>
 
-          {/* Catch all - redirect to home */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Suspense>
-    </Router>
+            {/* Catch all - redirect to home */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
+      </Router>
+    </ErrorBoundary>
   );
 }
 
