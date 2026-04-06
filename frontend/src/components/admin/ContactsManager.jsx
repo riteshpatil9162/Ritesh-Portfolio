@@ -19,10 +19,13 @@ const ContactsManager = () => {
       const response = await axios.get(`${API_URL}/api/contacts`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setContacts(response.data);
+      // Backend returns { success: true, data: [...] }
+      const contactsData = response.data.data || response.data || [];
+      setContacts(Array.isArray(contactsData) ? contactsData : []);
     } catch (error) {
       console.error('Error fetching contacts:', error);
       alert('Failed to fetch contacts');
+      setContacts([]); // Set empty array on error
     } finally {
       setLoading(false);
     }

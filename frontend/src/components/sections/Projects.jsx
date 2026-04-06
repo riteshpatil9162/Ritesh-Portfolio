@@ -67,7 +67,7 @@ const ProjectCard = ({ project, index }) => {
 
         {/* Tech Stack */}
         <div className="flex flex-wrap gap-2 mb-4">
-          {project.tech.map((tech, i) => (
+          {Array.isArray(project.tech) && project.tech.map((tech, i) => (
             <span
               key={i}
               className="px-2 py-1 bg-white/5 rounded text-xs text-gray-300"
@@ -127,11 +127,14 @@ const Projects = () => {
       try {
         setLoading(true);
         const response = await axios.get(`${API_URL}/api/projects`);
-        setProjects(response.data);
+        // Backend returns { success: true, data: [...] }
+        const projectsData = response.data.data || response.data || [];
+        setProjects(Array.isArray(projectsData) ? projectsData : []);
         setError(null);
       } catch (err) {
         console.error('Error fetching projects:', err);
         setError('Failed to load projects. Please try again later.');
+        setProjects([]); // Set empty array on error
       } finally {
         setLoading(false);
       }

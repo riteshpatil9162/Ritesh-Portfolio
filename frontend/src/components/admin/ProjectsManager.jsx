@@ -30,10 +30,13 @@ const ProjectsManager = () => {
     try {
       setLoading(true);
       const response = await axios.get(`${API_URL}/api/projects`);
-      setProjects(response.data);
+      // Backend returns { success: true, data: [...] }
+      const projectsData = response.data.data || response.data || [];
+      setProjects(Array.isArray(projectsData) ? projectsData : []);
     } catch (error) {
       console.error('Error fetching projects:', error);
       alert('Failed to fetch projects');
+      setProjects([]); // Set empty array on error
     } finally {
       setLoading(false);
     }
@@ -94,7 +97,7 @@ const ProjectsManager = () => {
       title: project.title,
       description: project.description,
       category: project.category,
-      tech: project.tech.join(', '),
+      tech: Array.isArray(project.tech) ? project.tech.join(', ') : (project.tech || ''),
       icon: project.icon,
       github: project.github || '',
       live: project.live || '',
@@ -193,7 +196,7 @@ const ProjectsManager = () => {
 
               {/* Tech Stack */}
               <div className="flex flex-wrap gap-2 mb-4">
-                {project.tech.map((tech, i) => (
+                {Array.isArray(project.tech) && project.tech.map((tech, i) => (
                   <span key={i} className="px-2 py-1 bg-white/5 rounded text-xs text-gray-300">
                     {tech}
                   </span>
