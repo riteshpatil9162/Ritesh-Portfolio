@@ -64,7 +64,12 @@ export const getProject = async (req, res) => {
 // @access  Private (Admin)
 export const createProject = async (req, res) => {
   try {
-    const project = await Project.create(req.body);
+    const projectData = { ...req.body };
+    if (req.file && req.file.path) {
+      projectData.image = req.file.path;
+    }
+
+    const project = await Project.create(projectData);
 
     res.status(201).json({
       success: true,
@@ -85,9 +90,14 @@ export const createProject = async (req, res) => {
 // @access  Private (Admin)
 export const updateProject = async (req, res) => {
   try {
+    const projectData = { ...req.body };
+    if (req.file && req.file.path) {
+      projectData.image = req.file.path;
+    }
+
     const project = await Project.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      projectData,
       { new: true, runValidators: true }
     );
 

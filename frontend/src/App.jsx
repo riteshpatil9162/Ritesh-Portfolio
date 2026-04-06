@@ -17,6 +17,7 @@ import Login from './components/admin/Login';
 import DashboardLayout from './components/admin/DashboardLayout';
 import ProjectsManager from './components/admin/ProjectsManager';
 import ContactsManager from './components/admin/ContactsManager';
+import AchievementsManager from './components/admin/AchievementsManager';
 import ProtectedRoute from './components/admin/ProtectedRoute';
 
 // Loading Component
@@ -71,6 +72,7 @@ function App() {
               {/* Default redirect to projects */}
               <Route index element={<Navigate to="/admin/dashboard/projects" replace />} />
               <Route path="projects" element={<ProjectsManager />} />
+              <Route path="achievements" element={<AchievementsManager />} />
               <Route path="contacts" element={<ContactsManager />} />
             </Route>
 

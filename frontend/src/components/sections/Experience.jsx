@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { API_URL } from '../../config/api';
 import { motion } from 'framer-motion';
 
 const TimelineItem = ({ item, index, isLeft }) => {
@@ -61,6 +63,24 @@ const TimelineItem = ({ item, index, isLeft }) => {
 };
 
 const Experience = () => {
+  const [achievementsList, setAchievementsList] = useState([]);
+  const [loadingAchievements, setLoadingAchievements] = useState(true);
+
+  useEffect(() => {
+    const fetchAchievements = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/api/achievements`);
+        const data = response.data.data || response.data || [];
+        setAchievementsList(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error('Error fetching achievements:', error);
+      } finally {
+        setLoadingAchievements(false);
+      }
+    };
+    fetchAchievements();
+  }, []);
+
   const experiences = [
     {
       icon: '💼',
@@ -187,16 +207,13 @@ const Experience = () => {
             🏅 Achievements & Certifications
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              'Machine Learning Specialization - Coursera',
-              'AWS Certified Cloud Practitioner',
-              'Winner - National Hackathon 2024',
-              'Deep Learning Specialization',
-              'React Advanced Certification',
-              'Published Research Paper on ML',
-            ].map((achievement, index) => (
+            {loadingAchievements ? (
+              <div className="col-span-full text-center text-gray-400 py-10">Loading achievements...</div>
+            ) : achievementsList.length === 0 ? (
+              <div className="col-span-full text-center text-gray-400 py-10">No achievements found.</div>
+            ) : achievementsList.map((achievement, index) => (
               <motion.div
-                key={index}
+                key={achievement._id || index}
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
@@ -204,7 +221,7 @@ const Experience = () => {
                 className="glass rounded-xl p-4 flex items-center gap-3 hover:bg-white/10 transition-all"
               >
                 <span className="text-2xl">✅</span>
-                <span className="text-gray-300 text-sm">{achievement}</span>
+                <span className="text-gray-300 text-sm">{achievement.title}</span>
               </motion.div>
             ))}
           </div>

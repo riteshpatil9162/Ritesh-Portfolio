@@ -8,6 +8,7 @@ import contactRoutes from './routes/contactRoutes.js';
 import projectRoutes from './routes/projectRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import chatbotRoutes from './routes/chatbotRoutes.js';
+import achievementRoutes from './routes/achievementRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -48,6 +49,7 @@ app.use('/api/contact', contactRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/chatbot', chatbotRoutes);
+app.use('/api/achievements', achievementRoutes);
 
 // Root route
 app.get('/', (req, res) => {
@@ -59,6 +61,7 @@ app.get('/', (req, res) => {
       projects: '/api/projects',
       admin: '/api/admin',
       chatbot: '/api/chatbot',
+      achievements: '/api/achievements',
     },
   });
 });

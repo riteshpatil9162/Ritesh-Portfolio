@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import Admin from '../models/Admin.js';
+import fs from 'fs';
 
 export const protect = async (req, res, next) => {
   let token;
@@ -14,14 +15,16 @@ export const protect = async (req, res, next) => {
 
       // Get admin from token
       req.admin = await Admin.findById(decoded.id).select('-password');
-
-      next();
     } catch (error) {
-      res.status(401).json({
+      fs.appendFileSync('auth_debug.log', new Date().toISOString() + ': ' + error.stack + '\n');
+      console.error('Token Verification Error:', error);
+      return res.status(401).json({
         success: false,
-        message: 'Not authorized, token failed',
+        message: `Token Verification Failed: ${error.message}`,
+        error: error.message
       });
     }
+    return next();
   }
 
   if (!token) {

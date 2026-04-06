@@ -22,6 +22,10 @@ const projectSchema = new mongoose.Schema({
     type: String,
     default: '🚀',
   },
+  image: {
+    type: String,
+    default: null,
+  },
   github: {
     type: String,
     trim: true,

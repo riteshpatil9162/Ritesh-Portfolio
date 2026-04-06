@@ -29,8 +29,9 @@ const Login = () => {
     try {
       const response = await axios.post(`${API_URL}/api/admin/login`, formData);
       
-      // Save token to localStorage
-      localStorage.setItem('adminToken', response.data.token);
+      // Save token to localStorage. The backend wraps the response data in a 'data' object.
+      const token = response.data.data ? response.data.data.token : response.data.token;
+      localStorage.setItem('adminToken', token);
       
       // Redirect to dashboard
       navigate('/admin/dashboard');

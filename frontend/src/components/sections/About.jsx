@@ -1,48 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { motion, useInView } from 'framer-motion';
+import React from 'react';
+import { motion } from 'framer-motion';
 
-const AnimatedCounter = ({ end, duration = 2, suffix = '' }) => {
-  const [count, setCount] = useState(0);
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
-
-  useEffect(() => {
-    if (isInView) {
-      let startTime;
-      let animationFrame;
-
-      const animate = (currentTime) => {
-        if (!startTime) startTime = currentTime;
-        const progress = (currentTime - startTime) / (duration * 1000);
-
-        if (progress < 1) {
-          setCount(Math.floor(end * progress));
-          animationFrame = requestAnimationFrame(animate);
-        } else {
-          setCount(end);
-        }
-      };
-
-      animationFrame = requestAnimationFrame(animate);
-
-      return () => cancelAnimationFrame(animationFrame);
-    }
-  }, [isInView, end, duration]);
-
-  return (
-    <span ref={ref} className="font-mono text-4xl md:text-5xl font-bold gradient-text">
-      {count}{suffix}
-    </span>
-  );
-};
 
 const About = () => {
-  const stats = [
-    { label: 'Projects Completed', value: 25, suffix: '+' },
-    { label: 'Technologies Mastered', value: 15, suffix: '+' },
-    { label: 'Years Experience', value: 3, suffix: '+' },
-  ];
-
   const highlights = [
     {
       icon: '🎓',
@@ -163,30 +123,7 @@ const About = () => {
           </motion.div>
         </div>
 
-        {/* Stats Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8"
-        >
-          {stats.map((stat, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.2 }}
-              className="glass-strong rounded-2xl p-8 text-center hover:scale-105 transition-transform duration-300"
-            >
-              <AnimatedCounter end={stat.value} suffix={stat.suffix} />
-              <p className="text-gray-300 mt-4 text-lg font-medium">
-                {stat.label}
-              </p>
-            </motion.div>
-          ))}
-        </motion.div>
+
       </div>
     </section>
   );

@@ -12,11 +12,11 @@ const ProjectsManager = () => {
     title: '',
     description: '',
     category: 'Web Dev',
-    tech: '',
     icon: '🚀',
     github: '',
     live: '',
-    featured: true
+    featured: true,
+    imageFile: null
   });
 
   const categories = ['Data Science', 'Web Dev', 'Android'];
@@ -43,11 +43,18 @@ const ProjectsManager = () => {
   };
 
   const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === 'checkbox' ? checked : value
-    });
+    const { name, value, type, checked, files } = e.target;
+    if (type === 'file') {
+      setFormData({
+        ...formData,
+        [name]: files[0]
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: type === 'checkbox' ? checked : value
+      });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -60,23 +67,41 @@ const ProjectsManager = () => {
     }
 
     try {
-      const projectData = {
-        ...formData,
-        tech: formData.tech.split(',').map(t => t.trim()).filter(t => t)
-      };
+      let payload;
+      let headers = { Authorization: `Bearer ${token}` };
+
+      if (formData.imageFile) {
+        payload = new FormData();
+        Object.keys(formData).forEach(key => {
+          if (key === 'imageFile') {
+            payload.append('image', formData.imageFile);
+          } else if (key === 'tech') {
+            const techArr = Array.isArray(formData.tech) ? formData.tech : formData.tech.split(',').map(t => t.trim()).filter(t => t);
+            techArr.forEach(t => payload.append('tech', t));
+          } else {
+            payload.append(key, formData[key]);
+          }
+        });
+        // Let axios set the proper multipart/form-data content type w/ boundary
+      } else {
+        payload = {
+          ...formData,
+          tech: Array.isArray(formData.tech) ? formData.tech : (formData.tech || '').split(',').map(t => t.trim()).filter(t => t)
+        };
+      }
 
       if (editingProject) {
         await axios.put(
           `${API_URL}/api/projects/${editingProject._id}`,
-          projectData,
-          { headers: { Authorization: `Bearer ${token}` } }
+          payload,
+          { headers }
         );
         alert('Project updated successfully!');
       } else {
         await axios.post(
           `${API_URL}/api/projects`,
-          projectData,
-          { headers: { Authorization: `Bearer ${token}` } }
+          payload,
+          { headers }
         );
         alert('Project created successfully!');
       }
@@ -87,7 +112,17 @@ const ProjectsManager = () => {
       fetchProjects();
     } catch (error) {
       console.error('Error saving project:', error);
-      alert(error.response?.data?.message || 'Failed to save project');
+      
+      // Auto-logout if token is expired/invalid
+      if (error.response?.status === 401) {
+        localStorage.removeItem('adminToken');
+        alert('Your session has expired or is invalid. You will be redirected to log back in securely.');
+        window.location.href = '/admin/login';
+        return;
+      }
+
+      const errorMsg = error.response?.data?.message || error.response?.data?.error?.message || error.message || 'Failed to save project';
+      alert(`Error: ${errorMsg}\n\nIf this persists, check your backend terminal for the specific cause (e.g., Invalid Cloudinary Keys).`);
     }
   };
 
@@ -101,7 +136,8 @@ const ProjectsManager = () => {
       icon: project.icon,
       github: project.github || '',
       live: project.live || '',
-      featured: project.featured
+      featured: project.featured,
+      imageFile: null
     });
     setShowModal(true);
   };
@@ -131,7 +167,8 @@ const ProjectsManager = () => {
       icon: '🚀',
       github: '',
       live: '',
-      featured: true
+      featured: true,
+      imageFile: null
     });
   };
 
@@ -178,7 +215,11 @@ const ProjectsManager = () => {
               {/* Project Header */}
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <span className="text-4xl">{project.icon}</span>
+                  {project.image ? (
+                    <img src={project.image} alt={project.title} className="w-12 h-12 rounded object-cover shrink-0" />
+                  ) : (
+                    <span className="text-4xl shrink-0">{project.icon}</span>
+                  )}
                   <div>
                     <h3 className="text-lg font-bold text-white">{project.title}</h3>
                     <span className="text-xs text-primary">{project.category}</span>
@@ -313,6 +354,19 @@ const ProjectsManager = () => {
                     ))}
                   </select>
                 </div>
+              </div>
+
+              {/* Dashboard Image Upload */}
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Dashboard Image</label>
+                <input
+                  type="file"
+                  name="imageFile"
+                  accept="image/*"
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/20 file:text-primary hover:file:bg-primary/30"
+                />
+                <p className="text-xs text-gray-500 mt-1">If provided, this image will replace the project icon on the dashboard.</p>
               </div>
 
               {/* Tech Stack */}
