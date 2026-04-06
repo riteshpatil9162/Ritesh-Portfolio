@@ -1,6 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import VanillaTilt from 'vanilla-tilt';
+import axios from 'axios';
+import { API_URL } from '../../config/api';
 
 const ProjectCard = ({ project, index }) => {
   const tiltRef = useRef(null);
@@ -112,91 +114,31 @@ const ProjectCard = ({ project, index }) => {
 };
 
 const Projects = () => {
-  const [activeFilter, setActiveFilter] = React.useState('All');
+  const [activeFilter, setActiveFilter] = useState('All');
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const categories = ['All', 'Data Science', 'Web Dev', 'Android'];
 
-  const projects = [
-    {
-      icon: '🧠',
-      title: 'AI-Powered Disease Predictor',
-      description: 'Machine learning model that predicts diseases based on symptoms using Random Forest and Neural Networks. Achieved 94% accuracy on test data.',
-      category: 'Data Science',
-      tech: ['Python', 'TensorFlow', 'Scikit-learn', 'Flask'],
-      github: '#',
-      live: '#',
-    },
-    {
-      icon: '📊',
-      title: 'Real-Time Data Dashboard',
-      description: 'Interactive dashboard for visualizing real-time data analytics with beautiful charts and insights using D3.js and React.',
-      category: 'Data Science',
-      tech: ['React', 'D3.js', 'Python', 'MongoDB'],
-      github: '#',
-      live: '#',
-    },
-    {
-      icon: '🛒',
-      title: 'E-Commerce Platform',
-      description: 'Full-stack e-commerce application with payment integration, admin dashboard, and real-time inventory management.',
-      category: 'Web Dev',
-      tech: ['React', 'Node.js', 'MongoDB', 'Stripe'],
-      github: '#',
-      live: '#',
-    },
-    {
-      icon: '💬',
-      title: 'AI Chatbot Assistant',
-      description: 'Intelligent chatbot using NLP and transformer models to provide customer support and answer queries.',
-      category: 'Data Science',
-      tech: ['Python', 'Transformers', 'FastAPI', 'React'],
-      github: '#',
-      live: '#',
-    },
-    {
-      icon: '📱',
-      title: 'Fitness Tracker App',
-      description: 'Android application for tracking workouts, calories, and fitness goals with beautiful UI and cloud sync.',
-      category: 'Android',
-      tech: ['Kotlin', 'Firebase', 'Jetpack Compose'],
-      github: '#',
-    },
-    {
-      icon: '🎬',
-      title: 'Movie Recommendation System',
-      description: 'Content-based and collaborative filtering system that recommends movies based on user preferences and ratings.',
-      category: 'Data Science',
-      tech: ['Python', 'Pandas', 'Scikit-learn', 'Streamlit'],
-      github: '#',
-      live: '#',
-    },
-    {
-      icon: '🌐',
-      title: 'Social Media Platform',
-      description: 'Full-featured social media app with posts, comments, likes, real-time chat, and user authentication.',
-      category: 'Web Dev',
-      tech: ['React', 'Node.js', 'Socket.io', 'MongoDB'],
-      github: '#',
-      live: '#',
-    },
-    {
-      icon: '📸',
-      title: 'Image Recognition App',
-      description: 'Computer vision application that identifies objects in images using CNN and transfer learning.',
-      category: 'Data Science',
-      tech: ['Python', 'PyTorch', 'OpenCV', 'Flask'],
-      github: '#',
-      live: '#',
-    },
-    {
-      icon: '🎮',
-      title: 'Game Stats Tracker',
-      description: 'Android app for gamers to track their statistics, achievements, and compete with friends.',
-      category: 'Android',
-      tech: ['Java', 'Firebase', 'Room DB'],
-      github: '#',
-    },
-  ];
+  // Fetch projects from API
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(`${API_URL}/api/projects`);
+        setProjects(response.data);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching projects:', err);
+        setError('Failed to load projects. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
 
   const filteredProjects = activeFilter === 'All' 
     ? projects 
@@ -247,11 +189,26 @@ const Projects = () => {
         </motion.div>
 
         {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProjects.map((project, index) => (
-            <ProjectCard key={index} project={project} index={index} />
-          ))}
-        </div>
+        {loading ? (
+          <div className="text-center py-20">
+            <div className="inline-block w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-gray-400 mt-4">Loading projects...</p>
+          </div>
+        ) : error ? (
+          <div className="text-center py-20">
+            <p className="text-red-400">{error}</p>
+          </div>
+        ) : filteredProjects.length === 0 ? (
+          <div className="text-center py-20">
+            <p className="text-gray-400">No projects found in this category.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredProjects.map((project, index) => (
+              <ProjectCard key={project._id || index} project={project} index={index} />
+            ))}
+          </div>
+        )}
 
         {/* View More Button */}
         <motion.div

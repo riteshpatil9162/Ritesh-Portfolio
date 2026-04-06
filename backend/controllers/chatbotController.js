@@ -20,7 +20,7 @@ export const handleChatbot = async (req, res) => {
       },
       projects: {
         keywords: ['project', 'work', 'built', 'created', 'portfolio'],
-        response: "I've worked on various projects including AI-powered disease predictors, real-time data dashboards, e-commerce platforms, and mobile applications. You can view all my projects in the Projects section above!",
+        response: "I've worked on exciting projects like UrbanEye - a MERN-based municipal issue reporting platform with AI-powered validation, and DarshanEase - a temple ticket booking system with secure payments and real-time slot availability. You can view all my projects in the Projects section above!",
       },
       experience: {
         keywords: ['experience', 'job', 'internship', 'work'],
