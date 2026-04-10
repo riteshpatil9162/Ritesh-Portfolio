@@ -174,7 +174,7 @@ const Footer = () => {
               viewport={{ once: true }}
               className="text-gray-400 text-sm text-center md:text-left"
             >
-              &copy; {currentYear} Ritesh Patil. All rights reserved. Built with React, Three.js & ❤️
+              &copy; {currentYear} Ritesh Patil. All rights reserved.
             </motion.p>
 
             <motion.div
