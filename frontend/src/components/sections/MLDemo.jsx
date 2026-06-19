@@ -1,9 +1,5 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js';
-import { Doughnut, Bar } from 'react-chartjs-2';
-
-ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
 
 const MLDemo = () => {
   const [prediction, setPrediction] = useState(null);
@@ -42,59 +38,6 @@ const MLDemo = () => {
     }, 1500);
   };
 
-  // Chart data
-  const skillsData = {
-    labels: ['Python', 'Machine Learning', 'Data Analysis', 'Deep Learning', 'Web Dev'],
-    datasets: [
-      {
-        data: [95, 90, 95, 85, 92],
-        backgroundColor: [
-          'rgba(139, 92, 246, 0.8)',
-          'rgba(0, 240, 255, 0.8)',
-          'rgba(183, 148, 244, 0.8)',
-          'rgba(139, 92, 246, 0.6)',
-          'rgba(0, 240, 255, 0.6)',
-        ],
-        borderColor: [
-          'rgba(139, 92, 246, 1)',
-          'rgba(0, 240, 255, 1)',
-          'rgba(183, 148, 244, 1)',
-          'rgba(139, 92, 246, 1)',
-          'rgba(0, 240, 255, 1)',
-        ],
-        borderWidth: 2,
-      },
-    ],
-  };
-
-  const projectsData = {
-    labels: ['Data Science', 'Web Dev', 'Android', 'ML/AI'],
-    datasets: [
-      {
-        label: 'Number of Projects',
-        data: [8, 7, 2, 6],
-        backgroundColor: 'rgba(139, 92, 246, 0.8)',
-        borderColor: 'rgba(139, 92, 246, 1)',
-        borderWidth: 2,
-      },
-    ],
-  };
-
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: true,
-    plugins: {
-      legend: {
-        labels: {
-          color: '#fff',
-          font: {
-            size: 12,
-          },
-        },
-      },
-    },
-  };
-
   return (
     <section className="section-padding relative bg-black" id="ml-demo">
       {/* Background Effects */}
@@ -111,17 +54,18 @@ const MLDemo = () => {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="section-heading gradient-text">Live ML Demo & Analytics</h2>
+          <h2 className="section-heading gradient-text">Live ML Demo</h2>
           <p className="section-subheading">
-            Interactive machine learning demonstration and data visualization
+            Interactive machine learning demonstration
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 mb-12 md:mb-16">
+        {/* Centered Wrapper for ML Predictor */}
+        <div className="max-w-2xl mx-auto mb-12 md:mb-16">
           {/* ML Predictor */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="glass rounded-2xl p-4 sm:p-6 md:p-8"
           >
@@ -222,55 +166,7 @@ const MLDemo = () => {
               </motion.div>
             )}
           </motion.div>
-
-          {/* Skills Distribution Chart */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="glass rounded-2xl p-4 sm:p-6 md:p-8"
-          >
-            <div className="flex items-center gap-3 mb-6">
-              <span className="text-4xl">📊</span>
-              <h3 className="text-2xl font-bold text-white font-poppins">
-                Skills Distribution
-              </h3>
-            </div>
-            <div className="h-48 sm:h-56 md:h-64 flex items-center justify-center">
-              <Doughnut data={skillsData} options={chartOptions} />
-            </div>
-          </motion.div>
         </div>
-
-        {/* Projects Analytics */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="glass rounded-2xl p-4 sm:p-6 md:p-8"
-        >
-          <div className="flex items-center gap-3 mb-6">
-            <span className="text-4xl">📈</span>
-            <h3 className="text-2xl font-bold text-white font-poppins">
-              Project Analytics
-            </h3>
-          </div>
-          <div className="h-64 sm:h-72 md:h-80">
-            <Bar data={projectsData} options={{
-              ...chartOptions,
-              scales: {
-                y: {
-                  ticks: { color: '#fff' },
-                  grid: { color: 'rgba(255,255,255,0.1)' },
-                },
-                x: {
-                  ticks: { color: '#fff' },
-                  grid: { color: 'rgba(255,255,255,0.1)' },
-                },
-              },
-            }} />
-          </div>
-        </motion.div>
       </div>
     </section>
   );
