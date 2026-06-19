@@ -85,7 +85,7 @@ const Experience = () => {
     {
       icon: '💼',
       period: 'January 2026 - Present',
-      title: 'Website Development Intern',
+      title: 'Full Stack Developer Intern',
       organization: 'Brandkrit Technologies',
       description: 'Building responsive and user-centric web applications, focusing on clean UI/UX and full-stack functionality for real-world projects.',
       highlights: ['Web Development', 'Full Stack', 'UI/UX Design'],
